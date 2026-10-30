@@ -231,6 +231,16 @@ const timers = [
 ];
 timers.forEach((t) => t.unref());
 
+const reject = (status) => {
+  console.log(
+    `upgrade rejected: ${status} origin=${req.headers.origin ?? "(none)"} path=${(req.url || "").split("?")[0]}`
+  );
+  socket.write(
+    `HTTP/1.1 ${status} ${http.STATUS_CODES[status]}\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`
+  );
+  socket.destroy();
+};
+
 /* =========================================================
  * 起動・終了
  * ======================================================= */
